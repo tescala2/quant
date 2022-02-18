@@ -5,10 +5,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from forecaster.utils.data import get_loaders
-from forecaster.utils.describers import Message
-from forecaster.utils.describers import Signal
-from forecaster.utils.io import load_one_bms
+from quant.utils.data import get_loaders
 
 
 def train(data_loader, model, criterion, optimizer, device, debug=False):
@@ -71,19 +68,8 @@ def evaluate(data_loader, model, criterion, device, mode='Val', debug=False):
 
 
 def run(model, name, device, epochs=10, lr=0.001, bs=128, sequence_length=300, feature_first=False):
-    data_dir = Path("../../data/bms1/")
 
-    required_messages = [
-        Message(
-            name='batt_mod_temperatures_a',
-            limits=(-20, 70),
-            signals=[
-                Signal(name='batt_t_module1')
-            ]
-        )
-    ]
-
-    data = load_one_bms(data_dir, required_messages, debug=True)
+    data = load_data(data_dir)
 
     train_loader, val_loader, test_loader = get_loaders(
         data,
