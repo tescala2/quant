@@ -3,17 +3,19 @@ import pandas as pd
 import numpy as np
 import datetime as dt
 
-from utils.data import load_data
-from utils.useful_funcs import peaks_valleys
+from quant.utils.data import load_data
+from quant.utils.useful_funcs import peaks_valleys
 
 from pathlib import Path
 
 
 def three_plot(subset, width=.025, width2=.005, col1='green', col2='red'):
-    # makes a plot with 3 subplots
-    # first plot contains the bar chart with vwap overlaid
-    # second plot shows ratios of open, close, high, and low to vwap
-    # third plot shows rsi and the moving average of rsi
+    '''
+    makes a plot with 3 subplots
+    first plot contains the bar chart with vwap overlaid
+    second plot shows ratios of open, close, high, and low to vwap
+    third plot shows rsi and the moving average of rsi
+    '''
 
     up = subset[subset.close >= subset.open]
     down = subset[subset.close < subset.open]
@@ -58,8 +60,10 @@ def three_plot(subset, width=.025, width2=.005, col1='green', col2='red'):
 
 
 def buy_sell_plot(data, show_bars=True, method='VWAP', buy_col='orange', sell_col='navy'):
-    # makes a plot showing the bar chart (optional) with buy and sell targets overlaid
-    # on a given method (can be 'VWAP', 'average', or 'smooth average')
+    '''
+    makes a plot showing the bar chart (optional) with buy and sell targets overlaid
+    on a given method (can be 'VWAP', 'average', or 'smooth average')
+    '''
 
     width = .025
     width2 = .005

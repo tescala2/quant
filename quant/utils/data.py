@@ -5,10 +5,22 @@ import torch
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
 
-from utils.useful_funcs import peaks_valleys
+from quant.utils.useful_funcs import peaks_valleys
 
 
-def load_data(data_dir):
+def load_data(data_dir, ma_method='close', target_method='VWAP'):
+    '''
+    loads csv data into pandas dataframe with timestamp as the index
+    creates new columns:
+        average - average of the open, close, high, and low
+        smooth average - a smoothed curve of the average of the open, close, high, and low
+        open/VWAP - ratio of open to VWAP
+        high/VWAP - ratio of high to VWAP
+        low/VWAP - ratio of low to VWAP
+        close/VWAP - ratio of close to VWAP
+        MA_12 - 12 point moving average
+    '''
+
     df = pd.read_csv(data_dir, index_col='time').drop(
         columns=['Plot.1', 'Upper Bollinger Band', 'Lower Bollinger Band'])
     df.index = pd.to_datetime(df.index, unit='s')
@@ -24,10 +36,11 @@ def load_data(data_dir):
     df['low/VWAP'] = df.low / df.VWAP
     df['close/VWAP'] = df.close / df.VWAP
 
-    df['target'] = 0
-    peaks, valleys = peaks_valleys(df, method='VWAP')
-    df['target'][peaks] = 1
-    df['target'][valleys] = 2
+    targets = np.zeros_like(df[target_method])
+    peaks, valleys = peaks_valleys(df, method=target_method)
+    targets[peaks] = 1
+    targets[valleys] = 2
+    df['target'] = targets
 
     return df
 
