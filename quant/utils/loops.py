@@ -5,7 +5,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from quant.utils.data import get_loaders
+from quant.utils.data import get_loaders, load_data
 
 
 def train(data_loader, model, criterion, optimizer, device, debug=False):
@@ -67,18 +67,16 @@ def evaluate(data_loader, model, criterion, device, mode='Val', debug=False):
     return avg_loss
 
 
-def run(model, name, device, epochs=10, lr=0.001, bs=128, sequence_length=300, feature_first=False):
-
-    data = load_data(data_dir)
+def run(df, model, name, device, epochs=10, lr=0.001, bs=16, sequence_length=12, feature_first=False):
 
     train_loader, val_loader, test_loader = get_loaders(
-        data,
+        df,
         sequence_length=sequence_length,
         bs=bs,
         feature_first=feature_first
     )
 
-    criterion = nn.L1Loss()
+    criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
     best_val_loss = np.inf  # evaluate(val_loader, model, criterion, device, debug=True, mode='Val')

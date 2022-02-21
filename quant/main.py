@@ -8,12 +8,9 @@ from quant.utils import indicators
 
 from pathlib import Path
 
-data_dir = Path('FTX_SOLUSD, 60.csv')
+data_dir = Path('data/FTX_SOLUSD, 60.csv')
 
 solusd = load_data(data_dir)
-solusd = indicators.MA(solusd, 12)
-solusd = indicators.BBANDS(solusd, 12)
-solusd = indicators.KELCH(solusd, 12)
 
-print(solusd.tail())
+print(solusd.columns)
 
